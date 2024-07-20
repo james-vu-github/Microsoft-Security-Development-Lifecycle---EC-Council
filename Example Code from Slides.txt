@@ -1,0 +1,48 @@
+
+Static Analysis Example
+
+Customer customer = new Customer();
+customer.PrintGreeting(); // Potential null reference exception risk
+
+
+
+A static analyzer would flag the customer.PrintGreeting() line. 
+It understands that Name is not initialized, 
+and therefore calling PrintGreeting() could result in a null reference exception when trying to access Name.
+
+
+Dynamic Analysis Example
+
+
+C#
+// Vulnerable Code (C#)
+string query = "SELECT * FROM Users WHERE Username = '" + username + "' AND Password = '" + password + "'";
+// ...execute query...
+Use code with caution!
+
+
+Using Burp Suite, you'd intercept the login request and modify the username parameter to something like ' OR 1=1 --. 
+This would make the query return all users, potentially allowing unauthorized access.
+
+
+
+
+
+
+Manual Testing Example
+
+
+C#
+// Input Validation Example
+if (username.Length > 50 || !Regex.IsMatch(username, @"^[a-zA-Z0-9]+$"))
+{
+    // Handle invalid username
+}
+
+// Parameterized Query Example
+using (SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE username = @username AND password = @password", connection))
+{
+    cmd.Parameters.AddWithValue("@username", username);
+    cmd.Parameters.AddWithValue("@password", password);
+    // ... execute query
+}
